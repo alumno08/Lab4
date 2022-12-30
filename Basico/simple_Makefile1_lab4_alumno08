@@ -1,0 +1,20 @@
+resultadotest.txt : testzipf.py dats
+	python $< dats/*.dat > $@
+
+dats : dats/abyss.dat dats/isles.dat dats/last.dat dats/sierra.dat
+
+dats/%.dat : books/%.txt countwords.py
+	python countwords.py $< dats/$*.dat
+
+
+.PHONY : figs
+figs : figs/abyss.png figs/isles.png figs/last.png figs/sierra.png
+
+figs/%.png : dats/%.dat plotcounts.py
+	python plotcounts.py $< figs/$*.png
+
+.PHONY : clean
+clean :
+	rm -f dats/*.dat
+	rm -f resultadotest.txt
+	rm -f figs/*.png

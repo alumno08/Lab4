@@ -1,0 +1,48 @@
+COLA?=pacioli lejeune
+Results : $(COLA) 
+
+#Results : pacioli lejeune
+
+FILES=./Notebooks/*
+
+.PHONY : files
+files :
+	@echo $(FILES)
+
+
+pacioli : submit_kmer_pacioli_alumno08.sh $(FILES)
+	cp -r $(FILES) /home/alumno08/$@/lab4
+	sbatch $<
+
+
+lejeune : submit_kmer_lejeune_alumno08.sh $(FILES)
+	cp -r $(FILES) /home/alumno08/$@/lab4
+	sbatch $<
+	
+#OCHOA --> NO SE PUEDE EJECUTAR, no reconoce sbatch-bio(necesario para la cola ochoa)
+
+.PHONY : ochoa
+ochoa : submit_kmer_ochoa_alumno08.sh $(FILES)
+	cp -r $(FILES) /home/alumno08/ochoa/lab4
+	sbatch-bio $<
+
+.PHONY : copy
+copy:
+	cp /machines/pacioli/home/alumno08/lab4/slurm-*.out /home/alumno08/lab-4/Avanzado
+	cp /machines/lejeune/home/alumno08/lab4/slurm-*.out /home/alumno08/lab-4/Avanzado
+#	cp /machines/ochoa/home/alumno08/lab4/slurm-*.out /home/alumno08/lab-4/Avanzado
+
+
+.PHONY : clean
+clean : 
+	rm /home/alumno08/lab-4/Avanzado/slurm-*.out
+	rm /home/alumno08/pacioli/lab4/slurm-*.out
+	rm /home/alumno08/lejeune/lab4/slurm-*.out
+#	rm /home/alumno08//ochoa/lab4/slurm-*.out
+
+.PHONY : help
+help :
+	@echo "Objetivo del Makefile : Lanzar trabajo a las colas Pacioli y Lejeune."
+	@echo "files : Muestras los archivos necesarios en cada maquina."
+	@echo "copy : Copia los slurm de las respectivas maquinas a mi directorio actual."
+	@echo "help :  Elimina los slurm tanto de las maquinas como de mi directorio."
